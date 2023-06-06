@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task API</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Task API</a>
+    </nav>
+
+    <div class="container mt-4">
+        <h1>Welcome to the Task API</h1>
+        <p>This is the homepage of your Task API website.</p>
+
+        <h2>Features</h2>
+        <button id="getTasksBtn" class="btn btn-primary">Get Tasks</button>
+        <button id="addTaskBtn" class="btn btn-success">Add Task</button>
+        <button id="updateTaskBtn" class="btn btn-warning">Update Task</button>
+        <button id="deleteTaskBtn" class="btn btn-danger">Delete Task</button>
+
+        <div id="output" class="mt-4"></div>
+
+        <h2>API Endpoints</h2>
+        <p>Here are the available API endpoints:</p>
+        <ul>
+            <li>GET /tasks - Get all tasks</li>
+            <li>GET /tasks/{task_id} - Get a specific task</li>
+            <li>POST /tasks - Add a new task</li>
+            <li>PUT /tasks/{task_id} - Update a task</li>
+            <li>DELETE /tasks/{task_id} - Delete a task</li>
+        </ul>
+
+        <footer class="mt-4">
+            <p>&copy; 2023 Task API. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Get tasks
+            $("#getTasksBtn").click(function() {
+                $.get("/tasks", function(data) {
+                    $("#output").html(JSON.stringify(data));
+                }).fail(function() {
+                    $("#output").html("Failed to retrieve tasks.");
+                });
+            });
+
+            // Add task
+            $("#addTaskBtn").click(function() {
+                var newTask = {
+                    "title": "New Task",
+                    "description": "This is a new task"
+                };
+
+                $.post("/tasks", newTask, function(data) {
+                    $("#output").html(JSON.stringify(data));
+                }).fail(function() {
+                    $("#output").html("Failed to add task.");
+                });
+            });
+
+            // Update task
+            $("#updateTaskBtn").click(function() {
+                var updatedTask = {
+                    "title": "Updated Task",
+                    "description": "This task has been updated"
+                };
+
+                var taskId = 1; // ID of the task to update
+
+                $.ajax({
+                    url: "/tasks/" + taskId,
+                    type: "PUT",
+                    data: updatedTask,
+                    success: function(data) {
+                        $("#output").html(JSON.stringify(data));
+                    },
+                    error: function() {
+                        $("#output").html("Failed to update task.");
+                    }
+                });
+            });
+
+            // Delete task
+            $("#deleteTaskBtn").click(function() {
+                var taskId = 1; // ID of the task to delete
+
+                $.ajax({
+                    url: "/tasks/" + taskId,
+                    type: "DELETE",
+                    success: function(data) {
+                        $("#output").html(JSON.stringify(data));
+                    },
+                    error: function() {
+                        $("#output").html("Failed to delete task.");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
